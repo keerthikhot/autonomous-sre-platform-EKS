@@ -1,70 +1,23 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: loki
+  name: loki-stack
   namespace: argocd
-  annotations:
-    argocd.argoproj.io/sync-wave: "1"
 spec:
   project: default
   source:
-    chart: loki
+    chart: loki-stack
     repoURL: https://grafana.github.io/helm-charts
-    targetRevision: 6.55.0
+    targetRevision: 2.10.2
     helm:
       values: |
-        deploymentMode: SingleBinary
         loki:
-          auth_enabled: false
-          useTestSchema: true
-          storage:
-            type: filesystem
-          commonConfig:
-            replication_factor: 1
-        singleBinary:
-          replicas: 1
           persistence:
-            enabled: false
-          resources:
-            requests:
-              cpu: 100m
-              memory: 256Mi
-            limits:
-              memory: 768Mi
-        backend:
-          replicas: 0
-        read:
-          replicas: 0
-        write:
-          replicas: 0
-        ingester:
-          replicas: 0
-        querier:
-          replicas: 0
-        queryFrontend:
-          replicas: 0
-        queryScheduler:
-          replicas: 0
-        distributor:
-          replicas: 0
-        compactor:
-          replicas: 0
-        indexGateway:
-          replicas: 0
-        bloomCompactor:
-          replicas: 0
-        bloomGateway:
-          replicas: 0
-        chunksCache:
-          enabled: false
-        resultsCache:
-          enabled: false
-        lokiCanary:
-          enabled: false
-        test:
-          enabled: false
+            enabled: false # Use emptyDir for demo simplicity
+        promtail:
+          enabled: true # This collects the logs from the nodes
   destination:
-    server: https://kubernetes.default.svc
+    server: "https://kubernetes.default.svc"
     namespace: monitoring
   syncPolicy:
     automated:

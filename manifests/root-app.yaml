@@ -3,25 +3,16 @@ kind: Application
 metadata:
   name: monitoring-root
   namespace: argocd
-  annotations:
-    argocd.argoproj.io/sync-wave: "0"
 spec:
   project: default
   source:
-    repoURL: https://github.com/keerthikhot/autonomous-sre-platform-EKS
-    # Must match the real branch name (case-sensitive). "Main" != "main".
-    targetRevision: main
-    path: manifests/monitoring
-    directory:
-      include: "*.yaml"
+    repoURL: https://github.com/YOUR_USERNAME/gitops-manifests.git
+    targetRevision: HEAD
+    path: k8s-manifests/monitoring
   destination:
-    server: https://kubernetes.default.svc
-    # Default namespace for manifests that omit metadata.namespace. Child Application
-    # resources set metadata.namespace: argocd explicitly.
+    server: "https://kubernetes.default.svc"
     namespace: argocd
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
-    syncOptions:
-      - PruneLast=true

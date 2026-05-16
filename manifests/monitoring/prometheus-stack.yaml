@@ -3,21 +3,71 @@ kind: Application
 metadata:
   name: prometheus-stack
   namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
 spec:
   project: default
   source:
     chart: kube-prometheus-stack
     repoURL: https://prometheus-community.github.io/helm-charts
-    targetRevision: 61.3.1 # Use a stable version
+    targetRevision: 61.3.1
     helm:
       values: |
+        defaultRules:
+          create: true
+        alertmanager:
+          enabled: false
         grafana:
           enabled: true
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              cpu: 300m
+              memory: 384Mi
         prometheus:
           prometheusSpec:
-            retention: 1d # Keep it small for a demo cluster
+            retention: 1d
+            resources:
+              requests:
+                cpu: 200m
+                memory: 384Mi
+              limits:
+                cpu: 1
+                memory: 1536Mi
+            # Single replica fits small node groups; avoids anti-affinity blocking schedules.
+            replicas: 1
+        prometheusOperator:
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              cpu: 200m
+              memory: 256Mi
+        kubeStateMetrics:
+          enabled: true
+        kube-state-metrics:
+          resources:
+            requests:
+              cpu: 30m
+              memory: 64Mi
+            limits:
+              cpu: 100m
+              memory: 128Mi
+        nodeExporter:
+          enabled: true
+        prometheus-node-exporter:
+          resources:
+            requests:
+              cpu: 50m
+              memory: 32Mi
+            limits:
+              cpu: 200m
+              memory: 64Mi
   destination:
-    server: "https://kubernetes.default.svc"
+    server: https://kubernetes.default.svc
     namespace: monitoring
   syncPolicy:
     automated:

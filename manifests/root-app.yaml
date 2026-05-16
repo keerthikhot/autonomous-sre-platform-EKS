@@ -9,7 +9,7 @@ spec:
   project: default
   source:
     repoURL: https://github.com/keerthikhot/autonomous-sre-platform-EKS
-    targetRevision: HEAD
+    targetRevision: MAIN
     path: manifests/monitoring
   destination:
     server: https://kubernetes.default.svc

@@ -1,0 +1,46 @@
+# Terraform state (never commit — may contain secrets)
+*.tfstate
+*.tfstate.*
+
+# Terraform working directory and lock (recreated by terraform init)
+**/.terraform/
+.terraform.lock.hcl
+
+# Local variable values
+*.tfvars
+*.tfvars.json
+!terraform.tfvars.example
+!**/*.tfvars.example
+
+# Override files
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Crash logs
+crash.log
+crash.*.log
+
+# Secrets and local env
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+credentials
+.aws/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editors
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log

@@ -9,8 +9,11 @@ spec:
   project: default
   source:
     repoURL: https://github.com/keerthikhot/autonomous-sre-platform-EKS
-    targetRevision: Main
+    # Must match the real branch name (case-sensitive). "Main" != "main".
+    targetRevision: main
     path: manifests/monitoring
+    directory:
+      include: "*.yaml"
   destination:
     server: https://kubernetes.default.svc
     # Default namespace for manifests that omit metadata.namespace. Child Application
@@ -20,3 +23,5 @@ spec:
     automated:
       prune: true
       selfHeal: true
+    syncOptions:
+      - PruneLast=true
